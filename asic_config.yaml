@@ -1,0 +1,11 @@
+udp:
+    asic_flow:
+        synthesis:
+            script: "run_sythesis.tcl"
+            rtl_path: "/mnt/c2s/sachin/hemanth/main/udp/rtl"
+            lib_path: "/mnt/c2s/sachin/hemanth/main/udp/libs"
+            sdc_path: "/mnt/c2s/sachin/hemanth/main/udp/sdc"
+            report_path: "/mnt/c2s/sachin/hemanth/main/udp/reports"
+            output_path: "/mnt/c2s/sachin/hemanth/main/udp/outputs"
+            log_path: "/mnt/c2s/sachin/hemanth/main/udp/logs"
+            scripts_path: "/mnt/c2s/sachin/hemanth/main/udp/scripts"

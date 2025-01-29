@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Prompt the user to enter the module name
+read -p "Enter the module name: " MODULE_NAME
+
+# Define the base directory using the provided module name
+BASE_DIR=$(pwd)/"$MODULE_NAME"
+
+# Define the folder structure
+FOLDERS=("verilog" "netlist" "sdc" "library" "reports" "outputs" "logs" "scripts")
+
+# Create the CSV file and add the headers and module name
+CSV_FILE="details.csv"
+echo "Folder,Path" > $CSV_FILE
+echo "module_name,$MODULE_NAME" >> $CSV_FILE
+
+# Create directories and append their paths to the CSV file
+for folder in "${FOLDERS[@]}"; do
+    mkdir -p "$BASE_DIR/$folder"
+    echo "$folder,$BASE_DIR/$folder" >> $CSV_FILE
+done
+
+echo "Directories created under $BASE_DIR."
+echo "Details saved in $CSV_FILE."
+

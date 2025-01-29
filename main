@@ -1,0 +1,63 @@
+#!/bin/tcsh -f
+
+echo " ░▒▓███████▓▒░  ▒▓██████▓▒   ▓███████▓▒  ▒▓███████▓▒  ▒▓█▓▒        ▒▓██████▓▒   ▒▓██████▓▒  ▒▓█▓▒  ▒▓██████▓▒░   "
+echo " ░▒▓█▓▒░      ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒░░▒▓█▓▒ ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░  " 
+echo " ░▒▓█▓▒░      ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒░       ▒▓█▓▒ ▒▓█▓▒          "
+echo " ░▒▓██████▓▒░ ░▒▓████████▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒▒▓███▓▒ ▒▓█▓▒ ▒▓█▓▒          "
+echo "       ░▒▓█▓▒ ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒░░▒▓█▓▒ ▒▓█▓▒ ▒▓█▓▒          "
+echo "       ░▒▓█▓▒ ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒░░▒▓█▓▒ ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░  "
+echo " ░▒▓███████▓▒ ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓███████▓▒  ▒▓████████▓▒ ▒▓██████▓▒   ▒▓██████▓▒  ▒▓█▓▒  ▒▓██████▓▒░   "
+                                                                                                               
+                                                                                                             
+
+
+set WORK_DIR = `pwd`
+
+#---------------------------------------------------------------------#
+#------------------------ Tool initialization ------------------------#
+#---------------------------------------------------------------------#
+
+if ($#argv != 1) then 
+	echo "Info: Please provide the csv file"
+	exit 1
+endif
+
+if (! -f $argv[1] || $argv[1] == "-help") then
+        if ($argv[1] != "-help") then
+                echo "Error:  Cannot find csv file $argv[1]. Exiting..."
+                exit 1
+        else
+                echo USAGE: ./vsdflow \<csv file\>
+                echo
+                echo         where \<csv file\> consists of 2 columns.
+                echo
+                echo         \<module_name\> is the name of top level module.
+                echo
+                echo         \<verilog\> is the name of directory where you want to dump all the verilog, system verilog and rtl files.
+                echo
+                echo         \<netlist\> is the name of directory where all synthesized netlist are generated after synthesis.
+                echo
+                echo         \<sdc\> is the name of the directory where all the design constraints should be stored cell.
+                echo
+                echo         \<library\> is the name of the directory where all the stdlib, macro libs, technology lib to be stored.
+                echo
+                echo         \<reports\> is directory where all the generated reports will be stored.
+                echo
+		echo	     \<logs\> is the directoy where all the logs generated from the tools are stored.
+                exit 1
+        endif
+else
+		tclsh scripts/flow.tcl $argv[1] 
+
+		#		if [ "$CHOOSED" -eq 1 ]; then
+			#	echo "Running Genus tool and sourcing synthesis.tcl..."
+			#genus -batch -source "$SYNTHESIS" 
+			#elif [ "$CHOOSED" -eq 2 ]; then
+				#echo "Running floorplan.tcl..."
+			#tclsh "$FLOORPLAN_SCRIPT"  # Run floorplan.tcl script
+			#else
+			#echo "Invalid option. Please run again."
+fi
+endif
+
+
