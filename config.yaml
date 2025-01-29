@@ -1,6 +1,0 @@
-asic_flow:
-        synthesis:
-                script: "run_synthesis"
-                log_file: "synthesis.log"
-                tools: "genus"
-                design_name: "
