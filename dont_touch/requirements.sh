@@ -1,19 +1,33 @@
-#! /bin/bash 
+#! /bin/bash
 
 read -p "Enter the design name: " DESIGN_NAME
 
-BASE_DIR=$(pwd)/$DESIGN_NAME
+BASE_DIR=$(pwd)
+DESIGN_DIR=$BASE_DIR/$DESIGN_NAME
 
-DESIGN_NAME="$DESIGN_NAME"
-RTL_DIR="$BASE_DIR/rtl"
-LIB_DIR="$BASE_DIR/libs"
-SDC_DIR="$BASE_DIR/sdc"
-RPT_DIR="$BASE_DIR/reports"
-OUT_DIR="$BASE_DIR/outputs"
-LOG_DIR="$BASE_DIR/logs"
-SCRIPTS_DIR="$BASE_DIR/scripts"
+RTL_DIR="$DESIGN_DIR/rtl"
+NETLIST_DIR="$DESIGN_DIR/netlist"
+LIB_DIR="$DESIGN_DIR/libs"
+SDC_DIR="$DESIGN_DIR/sdc"
+RPT_DIR="$DESIGN_DIR/reports"
+OUT_DIR="$DESIGN_DIR/outputs"
+LOG_DIR="$DESIGN_DIR/logs"
+SCRIPTS_DIR="$DESIGN_DIR/scripts"
 
-mkdir -p $RTL_DIR $LIB_DIR $SDC_DIR $RPT_DIR $OUT_DIR $LOG_DIR $SCRIPTS_DIR
+if [ -d "$DESIGN_DIR" ]; then
+    echo "Directory $DESIGN_DIR already exists. Moving files only."
+else
+    echo "Creating directory structure for $DESIGN_NAME."
+    mkdir -p $RTL_DIR $NETLIST_DIR $LIB_DIR $SDC_DIR $RPT_DIR $OUT_DIR $LOG_DIR $SCRIPTS_DIR
+fi
+
+mv $BASE_DIR/*.{v,sv} $RTL_DIR 2>/dev/null
+
+mv $BASE_DIR/*.{tcl,sh} $SCRIPTS_DIR 2>/dev/null
+
+mv $BASE_DIR/*.sdc $SDC_DIR 2>/dev/null
+
+mv $BASE_DIR/*.{lib,lef,tf} $LIB_DIR 2>/dev/null
 
 cat > asic_config.yaml <<EOL
 $DESIGN_NAME:
@@ -29,6 +43,5 @@ $DESIGN_NAME:
             scripts_path: "$SCRIPTS_DIR"
 EOL
 
-echo "ASIC synthesis enironment set up successfully"
-echo "Created directories under: $BASE_DIR"
-echo "Updated asic_config.yaml with paths"
+echo "ASIC synthesis environment setup complete."
+echo "Files moved to appropriate directories."

@@ -1,0 +1,38 @@
+# set DESIGN_NAME [lindex [array names CONFIG] 0]
+# set PATHS [dict get $CONFIG $DESIGN_NAME asic_flow synthesis]
+
+# set RTL_PATH [dict get $PATHS rtl_path]
+# set LIB_PATH [dict get $PATHS lib_path]
+# set SDC_PATH [dict get $PATHS sdc_path]
+# set RPT_PATH [dict get $PATHS report_path]
+# set OUT_PATH [dict get $PATHS output_path]
+# set LOG_PATH [dict get $PATHS log_path]
+
+# puts "$DESIGN_NAME"
+
+# Verify necessary files exist
+# foreach FILE "$RTL_PATH $LIB_PATH $SDC_PATH" {
+#     if {![file exists $FILE]} {
+#         puts "ERROR: Required file missing: $FILE"
+#         exit 1
+#     }
+# }
+
+# # Load libraries
+# read_libs $LIB_PATH
+
+# # Read RTL files
+# read_hdl $RTL_PATH/*.v
+
+# # Read constraints
+# read_sdc $SDC_PATH/*.sdc
+
+# # Synthesis
+# synthesize -to_mapped
+
+# # Save results
+# write_design -out $OUT_PATH/netlist.v
+# write_sdc $SDC_PATH/constraints.sdc
+# write_reports -out $RPT_PATH/synthesis_report.rpt
+
+# puts "Synthesis completed successfully. Logs stored in $LOG_PATH"

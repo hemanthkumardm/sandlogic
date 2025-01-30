@@ -2,10 +2,10 @@ udp:
     asic_flow:
         synthesis:
             script: "run_sythesis.tcl"
-            rtl_path: "/mnt/c2s/sachin/hemanth/main/udp/rtl"
-            lib_path: "/mnt/c2s/sachin/hemanth/main/udp/libs"
-            sdc_path: "/mnt/c2s/sachin/hemanth/main/udp/sdc"
-            report_path: "/mnt/c2s/sachin/hemanth/main/udp/reports"
-            output_path: "/mnt/c2s/sachin/hemanth/main/udp/outputs"
-            log_path: "/mnt/c2s/sachin/hemanth/main/udp/logs"
-            scripts_path: "/mnt/c2s/sachin/hemanth/main/udp/scripts"
+            rtl_path: "/home/hemanth/sandlogic/sandlogic/dont_touch/udp/rtl"
+            lib_path: "/home/hemanth/sandlogic/sandlogic/dont_touch/udp/libs"
+            sdc_path: "/home/hemanth/sandlogic/sandlogic/dont_touch/udp/sdc"
+            report_path: "/home/hemanth/sandlogic/sandlogic/dont_touch/udp/reports"
+            output_path: "/home/hemanth/sandlogic/sandlogic/dont_touch/udp/outputs"
+            log_path: "/home/hemanth/sandlogic/sandlogic/dont_touch/udp/logs"
+            scripts_path: "/home/hemanth/sandlogic/sandlogic/dont_touch/udp/scripts"
