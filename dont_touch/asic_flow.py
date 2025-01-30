@@ -1,11 +1,11 @@
 import os
-import yaml
+import json
 import subprocess
 
-def load_config(config_file="asic_config.yaml"):
-    """Load configuration from YAML file."""
+def load_config(config_file="asic_config.json"):
+    """Loading configuration from JSON file."""
     with open(config_file, "r") as file:
-        return yaml.safe_load(file)
+        return json.load(file)
 
 def run_synthesis(config):
     """Run synthesis flow using the provided config."""
