@@ -1,6 +1,15 @@
-# run_synthesis.tcl
+puts " ░▒▓███████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░░▒▓███████▓▒░▒▓█▓▒░░▒▓███████▓▒░ "
+puts "░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░        "
+puts "░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░        "
+puts " ░▒▓██████▓▒░ ░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░   ░▒▓████████▓▒░▒▓██████▓▒░  ░▒▓██████▓▒░░▒▓█▓▒░░▒▓██████▓▒░  "
+puts "       ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░             ░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░ "
+puts "       ░▒▓█▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░             ░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░ "
+puts "░▒▓███████▓▒░   ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓███████▓▒░░▒▓█▓▒░▒▓███████▓▒░  "
 
-# Set paths from environment variables or arguments
+
+
+# Get paths from environment variables
+set DESIGN_NAME $::env(DESIGN_NAME)
 set RTL_PATH $::env(RTL_PATH)
 set LIB_PATH $::env(LIB_PATH)
 set SDC_PATH $::env(SDC_PATH)
@@ -9,10 +18,14 @@ set OUTPUT_PATH $::env(OUTPUT_PATH)
 set LOG_PATH $::env(LOG_PATH)
 set SCRIPTS_PATH $::env(SCRIPTS_PATH)
 
-puts "$RTL_PATH"
+# Debugging - Print paths to ensure they are correct
+puts "RTL_PATH: $RTL_PATH" 
 
-# # Log the current synthesis step
-# log -path $LOG_PATH -append "Starting synthesis for $DESIGN_NAME."
+# Proper logging
+set logFile [open "$LOG_PATH/synthesis.log" "a"]
+puts $logFile "Starting synthesis for $DESIGN_NAME."
+close $logFile
+
 
 # # Load libraries
 # read_lib $LIB_PATH/*.lib
