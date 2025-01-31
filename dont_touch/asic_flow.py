@@ -16,7 +16,7 @@ def run_synthesis(config):
     error_file = os.path.join(paths['log_path'], "synthesis.err")
     
     script_path = os.path.join(paths['scripts_path'], "run_synthesis.tcl")
-    command = ["genus", "-legacy_ui", "-files", script_path]
+    command = ["genus", "-batch", "-files", script_path]
     
     with open(log_file, "w") as log, open(error_file, "w") as err:
         process = subprocess.run(command, cwd=paths['scripts_path'], stdout=log, stderr=err)
