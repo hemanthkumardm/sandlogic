@@ -23,7 +23,6 @@ def create_directories_and_move_files(design_name):
     }
 
 #----------------------------------------------------- checking dir -------------------------------------#
-
     if os.path.isdir(design_dir):
         print(f"Directory {design_dir} already exists. Moving files only.")
     else:
@@ -44,11 +43,17 @@ def create_directories_and_move_files(design_name):
                 shutil.copy(source, target)
                 print(f"Moved {file} to {target_dir}")
 
-    # Create the ASIC configuration JSON file
+#------------------------------------------------------- config.json ---------------------------------$
+
     config_file = os.path.join(design_dir, f"{design_name}_config.json")
     asic_config = {
         design_name: {
             "asic_flow": {
+                "user_details": {
+                    "user_name": user_name,
+                    "user_email": user_email,
+                    "default_emails": ["abc@sandlogic.com", "xyz@sandlogic.com", "123@sandlogic.com"]
+                },
                 "rtl": {
                     "design_name": design_name,
                     "script": "run_rtl.tcl",
@@ -83,43 +88,72 @@ def create_directories_and_move_files(design_name):
 
     return paths, config_file
 
+#---------------------------------------------- load config -----------------------------#
+
 def load_config(config_file):
-    """Loads configuration from JSON file."""
     with open(config_file, "r") as file:
         return json.load(file)
 
-def run_stage(config, env, stage):
-    """Runs the specified stage (RTL or synthesis) using a TCL script."""
-    
-    design_name = list(config.keys())[0]
-    stage_config = config[design_name]['asic_flow'][stage]
+#--------------------------------------------- running rtl ----------------------------#
 
-    script_path = os.path.join(stage_config['scripts_path'], stage_config['script'])
-    log_file = os.path.join(stage_config['log_path'], f"{stage}.log")
-    error_file = os.path.join(stage_config['log_path'], f"{stage}.err")
+def run_rtl(config, env):
+    design_name = list(config.keys())[0]
+    rtl_config = config[design_name]['asic_flow']['rtl']
+
+    script_path = os.path.join(rtl_config['scripts_path'], rtl_config['script'])
+    log_file = os.path.join(rtl_config['log_path'], "rtl.log")
+    error_file = os.path.join(rtl_config['log_path'], "rtl.err")
 
     env["DESIGN_NAME"] = design_name
-
-    # Set environment variables for TCL
-    for key, path in stage_config.items():
+    for key, path in rtl_config.items():
         if key.endswith("_path"):
-            env[key.upper()] = path  # Convert to uppercase like RTL_PATH
+            env[key.upper()] = path  
 
-    # Debugging: Print environment variables
-    print(f"\nRunning {stage} stage for {design_name}...")
-    for key, value in env.items():
-        if "PATH" in key:
-            print(f"{key}={value}")
+    print(f"\nRunning RTL stage for {design_name}...")
 
     command = ["tclsh", script_path]
 
     with open(log_file, "w") as log, open(error_file, "w") as err:
-        process = subprocess.run(command, cwd=stage_config['scripts_path'], stdout=log, stderr=err, env=env)
+        process = subprocess.run(command, cwd=rtl_config['scripts_path'], stdout=log, stderr=err, env=env)
 
     if process.returncode == 0:
-        print(f"{stage.capitalize()} completed successfully. Check logs for details.")
+        print("RTL completed successfully. Check logs for details.")
     else:
-        print(f"Errors occurred. Check {error_file}")
+        print(f"Errors occurred in RTL stage. Check {error_file}")
+
+#--------------------------------------------------- running synthesis --------------------------------------------#
+
+
+def run_synthesis(config, env, effort):
+    
+    design_name = list(config.keys())[0]
+    synthesis_config = config[design_name]['asic_flow']['synthesis']
+
+    script_path = os.path.join(synthesis_config['scripts_path'], synthesis_config['script'])
+    log_file = os.path.join(synthesis_config['log_path'], "synthesis.log")
+    error_file = os.path.join(synthesis_config['log_path'], "synthesis.err")
+
+    env["DESIGN_NAME"] = design_name
+    env["EFFORT_LEVEL"] = effort  # Pass effort level to the synthesis environment
+
+    # Set environment variables for TCL
+    for key, path in synthesis_config.items():
+        if key.endswith("_path"):
+            env[key.upper()] = path  
+
+    print(f"\nRunning synthesis stage for {design_name} with {effort} effort level...")
+
+    # Command to run the TCL script
+    command = ["tclsh", script_path]
+
+    with open(log_file, "w") as log, open(error_file, "w") as err:
+        process = subprocess.run(command, cwd=synthesis_config['scripts_path'], stdout=log, stderr=err, env=env)
+
+    if process.returncode == 0:
+        print("Synthesis completed successfully. Check logs for details.")
+    else:
+        print(f"Errors occurred in synthesis stage. Check {error_file}")
+
 
 if __name__ == "__main__":
 
@@ -135,24 +169,30 @@ if __name__ == "__main__":
                                                                                                              
 
     design_name = input("Enter the design name: ")
-
-    # Create directories, move files, and generate config
+    user_name = input("enter your name")
+    user_email = input("enter your email")
     paths, config_file = create_directories_and_move_files(design_name)
 
-    # Set environment variables for the TCL script
     env = os.environ.copy()
     for key, path in paths.items():
         env[key.upper() + "_PATH"] = path  
 
-    # Load the configuration
     config = load_config(config_file)
 
-    # Ask user which stage to run (RTL or synthesis)
     while True:
-        stage = input("Enter stage to run (rtl/synthesis): ").strip().lower()
-        if stage in ["rtl", "synthesis"]:
+        stage = input("Select stage to run (rtl/synthesis): ").strip().lower()
+        
+        if stage == "rtl":
+            run_rtl(config, env)
             break
-        print("Invalid input. Please enter 'rtl' or 'synthesis'.")
-
-    # Run the selected stage
-    run_stage(config, env, stage)
+        elif stage == "synthesis":
+            while True:
+                effort = input("Select effort level for synthesis (low, medium, high): ").strip().lower()
+                if effort in ["low", "medium", "high"]:
+                    run_synthesis(config, env, effort)
+                    break
+                else:
+                    print("Invalid input. Please enter 'low', 'medium', or 'high'.")
+            break
+        else:
+            print("Invalid input. Please enter 'rtl' or 'synthesis'.")

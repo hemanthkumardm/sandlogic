@@ -17,6 +17,7 @@ set REPORT_PATH $::env(REPORT_PATH)
 set OUTPUT_PATH $::env(OUTPUT_PATH)
 set LOG_PATH $::env(LOG_PATH)
 set SCRIPTS_PATH $::env(SCRIPTS_PATH)
+set EFFORT_LEVEL $::env(EFFORT_LEVEL)
 
 # Debugging - Print paths to ensure they are correct
 puts "RTL_PATH: $RTL_PATH" 
