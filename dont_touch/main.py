@@ -8,17 +8,15 @@ import datetime
 import pandas as pd
 import threading
 from tkinter import simpledialog
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
+from email.message import EmailMessage
+import ssl
 import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
+
+
+
 
 # Load user data from CSV
 def load_user_data(csv_file):
@@ -32,58 +30,84 @@ def load_user_data(csv_file):
             "synthesis": row["synthesis"].strip().lower() == "yes",
             "lec": row["lec"].strip().lower() == "yes",
             "pnr": row["pnr"].strip().lower() == "yes",
-            "default_email": row["default_email"].split("and")
+            "default_emails": row["default_emails"].split(' and ')
+
         }
     return user_dict
-
-# Send email
-def send_email(recipient_emails, subject, body, files=None):
-    smtp_server = "smtp.gmail.com"
-    smtp_port = 587
-    sender_email = "dmhemanthkumar@gmail.com"
-    sender_password = "123hemanth"
-
-    msg = MIMEMultipart()
-    msg["From"] = sender_email
-    msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
-
-    if files:
-        for file in files:
-            part = MIMEBase("application", "octet-stream")
-            with open(file, "rb") as f:
-                part.set_payload(f.read())
-            encoders.encode_base64(part)
-            part.add_header("Content-Disposition", f"attachment; filename={file.split('/')[-1]}")
-            msg.attach(part)
-
-    try:
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
-            for email in recipient_emails:
-                msg["To"] = email
-                server.sendmail(sender_email, email, msg.as_string())
-        print("Email sent successfully.")
-    except Exception as e:
-        print(f"Failed to send email: {str(e)}")
 
 # Load user data
 user_data = load_user_data("details.csv")
 
-def send_flow_results(design_name, user_name, user_email, default_emails):
-    log_files = [os.path.join(user_name, "logs", f"{design_name}_log.txt")]
-    error_files = [os.path.join(user_name, "logs", f"{design_name}_error.txt")]
-    subject = f"Automation Results for {design_name}"
-    body = f"Dear {user_name},\n\nThe automation flow for {design_name} has been completed. Please find the attached log and error files.\n\nBest regards,\nYour Team"
-    recipient_emails = [user_email] + default_emails
+
+#------------------------------------------------ Start of mails-----------------------------------------#
+
+
+def send_email(recipient_emails, subject, body, attachments=None):
+    email_sender = "dmhemanthkumar7@gmail.com"
+    email_password = os.getenv("EMAIL_PASSWORD")  
+
+    em = EmailMessage()
+    em["From"] = email_sender
+    em["Subject"] = subject
+    em.set_content(body)
+    em["To"] = ', '.join(recipient_emails)
+
+    if attachments:
+        for attachment in attachments:
+
+            if isinstance(attachment, tuple):
+                file_path, file_type = attachment
+            else:
+                file_path = attachment
+                file_type = "log" if "log" in file_path else "err"
+
+            try:
+                with open(file_path, 'rb') as f:
+                    file_data = f.read()
+                    base_name = file_path.split('/')[-1].rsplit('.', 1)[0]
+                    file_name = f"{base_name}_{file_type}.txt"
+
+                    em.add_attachment(file_data, maintype='text', subtype='plain', filename=file_name)
+                    print(f"Attached file: {file_name}")
+            except FileNotFoundError:
+                print(f"File not found: {file_path}")
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(email_sender, email_password)
+        smtp.sendmail(email_sender, recipient_emails, em.as_string())
+        print(f"Email sent to: {recipient_emails}")
+
+def send_flow_results(design_name, user_name, user_email, default_emails, log_file=None, error_file=None):
     
-    # Send email with log and error files
-    send_email(recipient_emails, subject, body, log_files + error_files)
+    subject = f"Automation Results for {design_name}"
+    body = "Attached are the logs and error details for your automation flow."
+
+    if not user_email:
+        print("Error: User email is not provided.")
+        return
+
+    if isinstance(default_emails, str):
+        default_emails = [default_emails]
+
+    recipients = [user_email] + (default_emails if default_emails else [])
+
+    # Collect attachments as tuples
+    attachments = []
+    if log_file:
+        attachments.append((log_file, "log"))
+    if error_file:
+        attachments.append((error_file, "err"))
+
+    send_email(recipients, subject, body, attachments)
+
+
+
+#------------------------------------------ END of mails---------------------------------------------#
 
 # Function to generate a timestamped filename
 def get_timestamped_filename(base_filename):
-    timestamp = datetime.datetime.now().strftime("%d-%m-%y-%H-%M-%S")
+    timestamp = datetime.datetime.now().strftime("%d-%m-%H:%M:%S")
     return f"{timestamp}_{base_filename}"
 
 
@@ -170,7 +194,7 @@ def create_directories_and_move_files(design_name, user_name, user_email):
                     "log_path": paths["logs"],
                     "scripts_path": paths["scripts"]
                 },
-                "placeNroute": {
+                "pnr": {
                     "design_name": design_name,
                     "script": "run_pnr.tcl",
                     "netlist": paths["netlist"],
@@ -227,7 +251,7 @@ def run_rtl(config, env, user_name, user_email, default_emails):
     else:
         print(f"Errors occurred in RTL stage. Check {error_file}")
 
-    send_flow_results(design_name, user_name, user_email, default_emails)
+    send_flow_results(design_name, user_name, user_email, default_emails, log_file, error_file)
 
 #--------------------------------------------------- running synthesis --------------------------------------------#
 
@@ -335,18 +359,16 @@ def run_pnr(config, env, effort, user_name, user_email, default_emails):
     else:
         print(f"Errors occurred in PNR stage. Check {error_file}")
 
-    send_flow_results(design_name, user_name, user_email, default_emails)
+    send_flow_results(design_name, user_name, user_email, default_emails, log_file, error_file)
 
 if __name__ == "__main__":
     print (" Started Automation......")
-
 
 
 root = tk.Tk()
 root.config(bg="lightgray")
 root.title("ASIC Flow Automation")
 root.geometry("1050x850")
-
 
 # ASCII Art Text
 ascii_art = """
@@ -375,8 +397,6 @@ name_var = tk.StringVar()
 name_dropdown = tk.OptionMenu(root, name_var, *user_data.keys())
 name_dropdown.config(font=("Helvetica", 12), width=30, bg="white", fg="black", relief="solid")
 name_dropdown.pack(pady=10)
-# name_entry = tk.Entry(root, width=50)
-# name_entry.pack()
 
 tk.Label(root, text="Your Email:", fg="blue", font=("Helvetica", 12, "bold"), bg="lightgray").pack(pady=(20, 10))
 email_entry = tk.Entry(root, width=50, state="readonly")
@@ -426,6 +446,12 @@ effort_dropdown.config(font=("Helvetica", 12), width=30, bg="white", fg="black",
 effort_dropdown.pack(pady=10)
 
 
+# Add "Forward to Leaders" checkbox
+forward_to_leaders_var = tk.BooleanVar()
+forward_to_leaders_checkbox = tk.Checkbutton(root, text="Do you want to forward it to leaders?", variable=forward_to_leaders_var, fg="blue")
+forward_to_leaders_checkbox.pack(pady=(10, 20))
+
+
 def on_name_select(event=None):
     selected_name = name_var.get()
     if selected_name in user_data:
@@ -447,16 +473,15 @@ def on_name_select(event=None):
 
 
 # Attach the event to the name dropdown
-# name_dropdown.bind("<configure>", on_name_select)
 name_var.trace_add("write", lambda *args: on_name_select(None))
 
 
 # Function to execute ASIC flow
-def execute_flow(user_data):
+def execute_flow(user_data, effort_level, forward_to_leaders):
     design_name = user_data["design_name"]
     user_name = user_data["user_name"]
     user_email = user_data["user_email"]
-    default_emails = user_data["default_email"]
+    default_emails = user_data["default_emails"] if forward_to_leaders else []
     paths, config_file = create_directories_and_move_files(design_name, user_name, user_email)
 
     env = os.environ.copy()
@@ -476,21 +501,22 @@ def execute_flow(user_data):
         run_lec(config, env, user_name, user_email, default_emails)
     
     if user_data["pnr_selected"]:
-        run_pnr(config, env, user_data["effort_level"])
+        run_pnr(config, env, effort_level, user_name, user_email, default_emails)
 
 def execute_async(user_data):
-    threading.Thread(target=execute_flow, args=(user_data,)).start()
+    threading.Thread(target=execute_flow, args=(user_data, effort_var.get(), forward_to_leaders_var.get())).start()
+
 
 # Confirm and Execute
 def confirm_and_execute():
     user_name = name_var.get()
     user_email = email_entry.get()
-    # design_name = design_entry.get()
     rtl_selected = rtl_var.get() and user_data[user_name]["rtl"]
     synthesis_selected = synthesis_var.get() and user_data[user_name]["synthesis"]
     lec_selected = lec_var.get() and user_data[user_name]["lec"]
     pnr_selected = pnr_var.get() and user_data[user_name]["pnr"]
     effort_level = effort_var.get()
+    forward_to_leaders = forward_to_leaders_var.get()
 
     # Validate input
     if not user_name or not user_email:
@@ -530,6 +556,7 @@ def confirm_and_execute():
     Design Name: {design_name}
     Selected Flows: {', '.join(selected_flows)}
     Effort Level: {effort_level}
+    Forward to leaders: {"Yes" if forward_to_leaders else "No"}
     """
     
     if messagebox.askyesno("Confirm Details", confirmation_message):
@@ -542,9 +569,9 @@ def confirm_and_execute():
             "synthesis_selected": synthesis_selected,
             "lec_selected": lec_selected,
             "pnr_selected": pnr_selected,
-            "effort_level": effort_level
+            "effort_level": effort_level,
+            "default_emails": user_data[user_name]["default_emails"],
         })
-        
 
 tk.Button(root, text="Submit", command=confirm_and_execute, fg="white", bg="darkblue").pack()
 
