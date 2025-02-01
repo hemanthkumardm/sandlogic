@@ -8,19 +8,8 @@ import datetime
 import pandas as pd
 import threading
 from tkinter import simpledialog
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
 
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
 
-# Load user data from CSV
 def load_user_data(csv_file):
     df = pd.read_csv(csv_file)
     user_dict = {}
@@ -31,55 +20,14 @@ def load_user_data(csv_file):
             "rtl": row["rtl"].strip().lower() == "yes",
             "synthesis": row["synthesis"].strip().lower() == "yes",
             "lec": row["lec"].strip().lower() == "yes",
-            "pnr": row["pnr"].strip().lower() == "yes",
-            "default_email": row["default_email"].split("and")
+            "pnr": row["pnr"].strip().lower() == "yes"
+
         }
     return user_dict
 
-# Send email
-def send_email(recipient_emails, subject, body, files=None):
-    smtp_server = "smtp.gmail.com"
-    smtp_port = 587
-    sender_email = "dmhemanthkumar@gmail.com"
-    sender_password = "123hemanth"
+# Load users at startup
 
-    msg = MIMEMultipart()
-    msg["From"] = sender_email
-    msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
-
-    if files:
-        for file in files:
-            part = MIMEBase("application", "octet-stream")
-            with open(file, "rb") as f:
-                part.set_payload(f.read())
-            encoders.encode_base64(part)
-            part.add_header("Content-Disposition", f"attachment; filename={file.split('/')[-1]}")
-            msg.attach(part)
-
-    try:
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
-            for email in recipient_emails:
-                msg["To"] = email
-                server.sendmail(sender_email, email, msg.as_string())
-        print("Email sent successfully.")
-    except Exception as e:
-        print(f"Failed to send email: {str(e)}")
-
-# Load user data
 user_data = load_user_data("details.csv")
-
-def send_flow_results(design_name, user_name, user_email, default_emails):
-    log_files = [os.path.join(user_name, "logs", f"{design_name}_log.txt")]
-    error_files = [os.path.join(user_name, "logs", f"{design_name}_error.txt")]
-    subject = f"Automation Results for {design_name}"
-    body = f"Dear {user_name},\n\nThe automation flow for {design_name} has been completed. Please find the attached log and error files.\n\nBest regards,\nYour Team"
-    recipient_emails = [user_email] + default_emails
-    
-    # Send email with log and error files
-    send_email(recipient_emails, subject, body, log_files + error_files)
 
 # Function to generate a timestamped filename
 def get_timestamped_filename(base_filename):
@@ -128,13 +76,14 @@ def create_directories_and_move_files(design_name, user_name, user_email):
 
 #------------------------------------------------------- config.json ---------------------------------$
 
-    config_file = os.path.join(design_dir, f"{user_name}_{design_name}_config.json")
+    config_file = os.path.join(design_dir, f"{design_name}_config.json")
     asic_config = {
         design_name: {
             "asic_flow": {
                 "user_details": {
                     "user_name": user_name,
                     "user_email": user_email,
+                    "default_emails": ["abc@sandlogic.com", "xyz@sandlogic.com", "123@sandlogic.com"]
                 },
                 "rtl": {
                     "design_name": design_name,
@@ -202,7 +151,7 @@ def load_config(config_file):
 
 #--------------------------------------------- running rtl ----------------------------#
 
-def run_rtl(config, env, user_name, user_email, default_emails):
+def run_rtl(config, env):
     design_name = list(config.keys())[0]
     rtl_config = config[design_name]['asic_flow']['rtl']
 
@@ -227,12 +176,10 @@ def run_rtl(config, env, user_name, user_email, default_emails):
     else:
         print(f"Errors occurred in RTL stage. Check {error_file}")
 
-    send_flow_results(design_name, user_name, user_email, default_emails)
-
 #--------------------------------------------------- running synthesis --------------------------------------------#
 
 
-def run_synthesis(config, env, effort, user_name, user_email, default_emails):
+def run_synthesis(config, env, effort):
     
     design_name = list(config.keys())[0]
     synthesis_config = config[design_name]['asic_flow']['synthesis']
@@ -261,16 +208,13 @@ def run_synthesis(config, env, effort, user_name, user_email, default_emails):
         print("Synthesis completed successfully. Check logs for details.")
     else:
         print(f"Errors occurred in synthesis stage. Check {error_file}")
-    
-    send_flow_results(design_name, user_name, user_email, default_emails)
-
 
 
 
 #--------------------------------------------------- lec --------------------------------------------#
 
 
-def run_lec(config, env, user_name, user_email, default_emails):
+def run_lec(config, env):
     
     design_name = list(config.keys())[0]
     lec_config = config[design_name]['asic_flow']['lec']
@@ -300,12 +244,11 @@ def run_lec(config, env, user_name, user_email, default_emails):
     else:
         print(f"Errors occurred in synthesis stage. Check {error_file}")
 
-    send_flow_results(design_name, user_name, user_email, default_emails)
         
 #--------------------------------------------------- pnr --------------------------------------------#
 
 
-def run_pnr(config, env, effort, user_name, user_email, default_emails):
+def run_pnr(config, env, effort):
     
     design_name = list(config.keys())[0]
     pnr_config = config[design_name]['asic_flow']['pnr']
@@ -315,7 +258,7 @@ def run_pnr(config, env, effort, user_name, user_email, default_emails):
     error_file = os.path.join(pnr_config['log_path'], get_timestamped_filename("pnr.err"))
 
     env["DESIGN_NAME"] = design_name
-    env["EFFORT_LEVEL"] = effort  # Pass effort level to the pnr environment
+    # env["EFFORT_LEVEL"] = effort  # Pass effort level to the pnr environment
 
     # Set environment variables for TCL
     for key, path in pnr_config.items():
@@ -335,7 +278,8 @@ def run_pnr(config, env, effort, user_name, user_email, default_emails):
     else:
         print(f"Errors occurred in PNR stage. Check {error_file}")
 
-    send_flow_results(design_name, user_name, user_email, default_emails)
+        
+
 
 if __name__ == "__main__":
     print (" Started Automation......")
@@ -456,7 +400,6 @@ def execute_flow(user_data):
     design_name = user_data["design_name"]
     user_name = user_data["user_name"]
     user_email = user_data["user_email"]
-    default_emails = user_data["default_email"]
     paths, config_file = create_directories_and_move_files(design_name, user_name, user_email)
 
     env = os.environ.copy()
@@ -467,16 +410,16 @@ def execute_flow(user_data):
 
     # Execute selected flows
     if user_data["rtl_selected"]:
-        run_rtl(config, env, user_name, user_email, default_emails)
+        run_rtl(config, env)
     
     if user_data["synthesis_selected"]:
-        run_synthesis(config, env, user_name, user_email, default_emails)
+        run_synthesis(config, env, user_data["effort_level"])
     
     if user_data["lec_selected"]:
-        run_lec(config, env, user_name, user_email, default_emails)
+        run_lec(config, env)
     
     if user_data["pnr_selected"]:
-        run_pnr(config, env, user_data["effort_level"])
+        run_pnr(config, env)
 
 def execute_async(user_data):
     threading.Thread(target=execute_flow, args=(user_data,)).start()

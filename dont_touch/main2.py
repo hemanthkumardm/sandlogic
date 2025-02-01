@@ -4,6 +4,12 @@ import os
 import json
 import shutil
 import subprocess
+import datetime
+
+# Function to generate a timestamped filename
+def get_timestamped_filename(base_filename):
+    timestamp = datetime.datetime.now().strftime("%d-%m-%y-%H-%M-%S")
+    return f"{timestamp}_{base_filename}"
 
 
 #-------------------------------------------- creating dir -------------------------------------------#
@@ -103,8 +109,8 @@ def run_rtl(config, env):
     rtl_config = config[design_name]['asic_flow']['rtl']
 
     script_path = os.path.join(rtl_config['scripts_path'], rtl_config['script'])
-    log_file = os.path.join(rtl_config['log_path'], "rtl.log")
-    error_file = os.path.join(rtl_config['log_path'], "rtl.err")
+    log_file = os.path.join(rtl_config['log_path'], get_timestamped_filename("rtl.log"))
+    error_file = os.path.join(rtl_config['log_path'], get_timestamped_filename("rtl.err"))
 
     env["DESIGN_NAME"] = design_name
     for key, path in rtl_config.items():
@@ -132,8 +138,8 @@ def run_synthesis(config, env, effort):
     synthesis_config = config[design_name]['asic_flow']['synthesis']
 
     script_path = os.path.join(synthesis_config['scripts_path'], synthesis_config['script'])
-    log_file = os.path.join(synthesis_config['log_path'], "synthesis.log")
-    error_file = os.path.join(synthesis_config['log_path'], "synthesis.err")
+    log_file = os.path.join(synthesis_config['log_path'], get_timestamped_filename("synthesis.log"))
+    error_file = os.path.join(synthesis_config['log_path'], get_timestamped_filename("synthesis.err"))
 
     env["DESIGN_NAME"] = design_name
     env["EFFORT_LEVEL"] = effort  # Pass effort level to the synthesis environment
@@ -166,7 +172,7 @@ if __name__ == "__main__":
 def execute_flow(user_data):
     design_name = user_data["design_name"]
     user_name = user_data["user_name"]
-    user_email = ["user_email"]
+    user_email = user_data["user_email"]
     paths, config_file = create_directories_and_move_files(design_name, user_name, user_email)
 
     env = os.environ.copy()
