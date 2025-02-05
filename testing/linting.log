@@ -1,0 +1,173 @@
+# ----------------------------------------
+# Jasper Version Info
+# tool      : Jasper 2024.03
+# platform  : Linux 4.18.0-513.18.1.el8_9.x86_64
+# version   : 2024.03 FCS 64 bits
+# build date: 2024.03.27 15:42:27 UTC
+# ----------------------------------------
+# started   : 2025-01-31 15:26:56 IST
+# hostname  : e2e-79-181.(none)
+# pid       : 539817
+# arguments : '-label' 'session_0' '-console' '//127.0.0.1:38121' '-style' 'windows' '-data' 'AAAAtnicY2RgYLCp////PwMYMFcBCTYGfwY3IIQDxgdQhg0jAyoA8ZlQRQIbUGgGBlaYZpgSkAYRBl2GYoZShgKGVIYihhyGTIY8hhKguAJDFkM6Vjk9IE4G8kAGAgAWqxLB' '-proj' '/mnt/c2s/axidma2/synth_wdma/lint_wdma/jgproject/sessionLogs/session_0' '-init' '-hidden' '/mnt/c2s/axidma2/synth_wdma/lint_wdma/jgproject/.tmp/.initCmds.tcl' 'jg-superlint.tcl'
+
+Any disclosure about the Cadence Design Systems software or its use
+model to any third party violates the written Non-Disclosure Agreement
+between Cadence Design Systems, Inc. and the customer.
+
+THIS SOFTWARE CONTAINS CONFIDENTIAL INFORMATION AND TRADE SECRETS OF
+CADENCE DESIGN SYSTEMS, INC. USE, DISCLOSURE, OR REPRODUCTION IS
+PROHIBITED WITHOUT THE PRIOR EXPRESS WRITTEN PERMISSION OF CADENCE
+DESIGN SYSTEMS, INC.
+
+Copyright (C) 2000-2024 Cadence Design Systems, Inc. All Rights
+Reserved.  Unpublished -- rights reserved under the copyright laws of
+the United States.
+
+This product includes software developed by others and redistributed
+according to license agreement. See doc/third_party_readme.txt for
+further details.
+
+RESTRICTED RIGHTS LEGEND
+
+Use, duplication, or disclosure by the Government is subject to
+restrictions as set forth in subparagraph (c) (1) (ii) of the Rights in
+Technical Data and Computer Software clause at DFARS 252.227-7013 or
+subparagraphs (c) (1) and (2) of Commercial Computer Software -- Restricted
+Rights at 48 CFR 52.227-19, as applicable.
+
+
+                          Cadence Design Systems, Inc.
+                          2655 Seely Avenue
+                          San Jose, CA 95134
+                          Phone: 408.943.1234
+
+For technical assistance visit http://support.cadence.com.
+
+Jasper Apps Analysis Session - /mnt/c2s/axidma2/synth_wdma/lint_wdma/jgproject/sessionLogs/session_0
+
+INFO: successfully checked out licenses "jasper_pint" and "jasper_papp".
+INFO: reading configuration file "/home/axidma2/.config/cadence/jasper.conf".
+% check_superlint -init
+INFO (ICD011): Message "VERI-1818" has been changed from "ignore" to "warning" level.
+% # ----------------------------------------
+% # Copyright (C) 2017 Cadence Design Systems, Inc. All Rights Reserved.
+% # Unpublished -- rights reserved under the copyright laws of the United States.
+% # ----------------------------------------
+% 
+% # Initialize Superlint App
+% check_superlint -init
+% 
+% config_rtlds -rule -load /opt/cadence/downloads/jasper2403/jasper_2024.03/etc/res/rtlds/rules/superlint.def
+WARNING (WRTL036): SEQ_NR_BLKA is deprecated. This will become obsolete from next release FLP_NR_BLAS, LAT_NR_BLAS will be issued instead.
+% 
+% # Read in HDL files
+% set RTL_PATH /mnt/c2s/axidma2/synth_wdma/lint_wdma
+/mnt/c2s/axidma2/synth_wdma/lint_wdma
+% 
+% analyze -clear
+% 
+% analyze -sv ${RTL_PATH}/fifo_v5.sv
+[-- (VERI-1482)] Analyzing Verilog file '/opt/cadence/downloads/jasper2403/jasper_2024.03/lib/verilog/packages/std/std.sv' into library 'std'
+[-- (VERI-1482)] Analyzing Verilog file '/mnt/c2s/axidma2/synth_wdma/lint_wdma/fifo_v5.sv'
+% analyze -sv ${RTL_PATH}/axi4_full_write_intf.sv
+[-- (VERI-1482)] Analyzing Verilog file '/mnt/c2s/axidma2/synth_wdma/lint_wdma/axi4_full_write_intf.sv'
+% analyze -sv ${RTL_PATH}/axi4_full_master.sv
+[-- (VERI-1482)] Analyzing Verilog file '/mnt/c2s/axidma2/synth_wdma/lint_wdma/axi4_full_master.sv'
+% analyze -sv ${RTL_PATH}/v5_dma_top.sv
+[-- (VERI-1482)] Analyzing Verilog file '/mnt/c2s/axidma2/synth_wdma/lint_wdma/v5_dma_top.sv'
+% 
+% # Elaborate design 
+% elaborate -bbox_a 1024
+[INFO (HIER-8002)] /mnt/c2s/axidma2/synth_wdma/lint_wdma/v5_dma_top.sv(102): Disabling old hierarchical reference handler
+[INFO (VERI-1018)] /mnt/c2s/axidma2/synth_wdma/lint_wdma/fifo_v5.sv(1): compiling module 'fifo_v5:(ADDR_DEPTH=5)'
+[INFO (VERI-2571)] /mnt/c2s/axidma2/synth_wdma/lint_wdma/fifo_v5.sv(27): extracting RAM for identifier 'mem_q'
+[INFO (VERI-1018)] /mnt/c2s/axidma2/synth_wdma/lint_wdma/axi4_full_master.sv(2): compiling module 'axi4_full_master:(C_M_TARGET_SLAVE_BASE_ADDR=32'b01000000000000000000000000000000,AXI_W=axi4_full_write_intf_master)'
+[INFO (VERI-1018)] /mnt/c2s/axidma2/synth_wdma/lint_wdma/v5_dma_top.sv(1): compiling module 'v5_dma_top:(AXI_W=axi4_full_write_intf_master)'
+INFO (ISW003): Top module name is "v5_dma_top:(AXI_W=axi4_full_write_intf_master)".
+INFO (INL208): Elaboration synthesis summary:
+  Number of synthesized netlists          3 (0 packages)
+  Single run mode                         On
+  Pipeline                                On (3 pipelined netlists)
+  Late hierarchical reference connection  On
+  Number of analyzed Verilog modules      4 (3 synthesized)
+  Number of analyzed VHDL entities        0 (0 synthesized)
+INFO (INL003): Clearing all state information (assumes, stopats, and so forth).
+v5_dma_top:(AXI_W=axi4_full_write_intf_master)
+[<embedded>] % 
+[<embedded>] % # Setup clocks and reset
+[<embedded>] % clock axi_aclk
+[<embedded>] % reset {axi_aresetn == 1'b0}
+INFO (IPM031): Clearing proof results of all properties.
+INFO (IRS006): Current reset condition is "axi_aresetn".
+[<embedded>] % 
+[<embedded>] % # Extract the checks 
+[<embedded>] % check_superlint -extract
+INFO (IRS029): Starting reset analysis: phase 1 of 4.
+INFO (IRS030): Running reset analysis: phase 2 of 4.
+INFO (IRS031): Running reset analysis: phase 3 of 4.
+INFO (IRS020): Starting the reset analysis simulation with a limit of 100 iterations (phase 4 of 4).
+INFO (IRS024): Reset iterations 0 to 4 analyzed.
+INFO (IRS018): Reset analysis simulation executed for 3 iterations. Assigned values for 174 of 174 design flops, 0 of 0 design latches, 68 of 68 internal elements.
+INFO (IRS039): Reset analysis complete.
+INFO (ISL018): Started extraction of structural checks
+INFO (ISL018): Started building clock tree
+INFO (ISL018): Finished building clock tree
+INFO (ISL018): Started building reset tree
+INFO (ISL018): Finished building reset tree
+INFO (ISL018): Violation Count: Errors = 0 Warnings = 546 Info = 2
+INFO (ISL009): Started detection of ASG_AR_OVFL, CAS_NO_UNIQ, CAS_NO_PRIO, BLK_NO_RCHB, ARY_IS_OOBI, EXP_AR_OVFL, ASG_IS_OVFL, EXP_IS_DVBZ checks
+INFO (ISL014): Started extracting properties for ASG_AR_OVFL, CAS_NO_UNIQ, CAS_NO_PRIO, BLK_NO_RCHB, ARY_IS_OOBI, EXP_AR_OVFL, ASG_IS_OVFL, EXP_IS_DVBZ checks
+INFO (ISL015): Extracted 63 properties of ASG_AR_OVFL, CAS_NO_UNIQ, CAS_NO_PRIO, BLK_NO_RCHB, ARY_IS_OOBI, EXP_AR_OVFL, ASG_IS_OVFL, EXP_IS_DVBZ
+INFO (ISL009): Started detection of BUS_IS_CONT, BUS_IS_FLOT checks
+INFO (ISL014): Started extracting properties for BUS_IS_CONT, BUS_IS_FLOT checks
+INFO (ISL018): Started grouping violations
+INFO (ISL018): Finished grouping violations
+820
+[<embedded>] % check_superlint -report
+
+=================================
+        Section 1: DFT DOMAIN  
+=================================
+
+
+===========================================
+        Section 1.1: VIOLATIONS SUMMARY  
+===========================================
+
+-----------------------------------------------------------
+ Category       | Error | Warning | Info | Waived | Total 
+-----------------------------------------------------------
+  DFT_CAPTURE      1       1         0      0        2     
+  DFT_FUNCTIONAL   0       8         0      0        8     
+  DFT_SHIFT        17      1         0      0        18    
+  Total            18      10        0      0        28    
+
+
+
+==================================
+        Section 2: LINT DOMAIN  
+==================================
+
+
+===========================================
+        Section 2.1: VIOLATIONS SUMMARY  
+===========================================
+
+--------------------------------------------------------
+ Category    | Error | Warning | Info | Waived | Total 
+--------------------------------------------------------
+  BLACKBOX      0       1         0      0        1     
+  CODINGSTYLE   0       26        2      0        28    
+  FILEFORMAT    0       441       0      0        441   
+  RACES         0       12        0      0        12    
+  STRUCTURAL    0       43        40     0        83    
+  SYNTHESIS     0       1         0      0        1     
+  Total         0       524       42     0        566   
+
+
+
+INFO (IPL005): Received request to exit from the console.
+INFO (IPL014): Waiting for the Tcl-thread to exit.
+INFO (IPL018): The peak resident set memory use for this session was 0.445 GB.
+INFO (IPL015): The Tcl-thread exited with status 0.
+INFO (IPL016): Exiting the analysis session with status 0.

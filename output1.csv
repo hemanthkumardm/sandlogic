@@ -1,0 +1,193 @@
+name,iteration1
+"Version: 21.18-s082_1, built Tue Jul 18 00:38:41 PDT",2023
+Date:    Mon Feb 03 09:43:55,2025
+PID:,874328
+Missing a function attribute in the output pin definition. [LBR-518]:,1
+exit,1
+Unresolved References,0
+Empty Modules,0
+Unloaded Port(s),0
+Unloaded Sequential Pin(s),1056
+Unloaded Combinational Pin(s),34
+Assigns,30
+Undriven Port(s),0
+Undriven Leaf Pin(s),0
+Undriven hierarchical pin(s),1024
+Multidriven Port(s),0
+Multidriven Leaf Pin(s),0
+Multidriven hierarchical Pin(s),0
+Multidriven unloaded net(s),0
+Constant Port(s),0
+Constant Leaf Pin(s),1
+Constant hierarchical Pin(s),25887
+Preserved leaf instance(s),0
+Preserved hierarchical instance(s),0
+Feedthrough Modules(s),0
+Libcells with no LEF cell,0
+Physical (LEF) cells with no libcell,0
+Subdesigns with long module name,0
+Physical only instance(s),0
+Logical only instance(s),0
+Unconnected/logic driven clocks,0
+Sequential data pins driven by a clock signal,0
+Sequential clock pins without clock waveform,0
+Sequential clock pins with multiple clock waveforms,0
+Generated clocks without clock waveform,0
+Generated clocks with incompatible options,0
+Generated clocks with multi-master clock,0
+Paths constrained with different clocks,0
+Loop-breaking cells for combinational feedback,0
+Nets with multiple drivers,0
+Timing exceptions with no effect,0
+Suspicious multi_cycle exceptions,0
+Pins/ports with conflicting case constants,0
+Inputs without clocked external delays,0
+Outputs without clocked external delays,0
+Inputs without external driver/transition,0
+Outputs without external load,0
+Exceptions with invalid timing start-/endpoints,0
+Total:,0
+Number of big hc bmuxes before =,1
+Number of non-ctl's :,16
+"SOP DEBUG : Module= bias_controller_DATA_WIDTH1024_DEPTH32_DATA_WIDTH_INT32_PARALLEL_OUT32_BIAS_WIDTH4, Cluster= ctl_next_state_151_15, ctl= 3, Non-ctl=",16
+CSAGen Prep Share:0 Re-Write:2 Speculation:,0
+CDN_DP_region_0_0 level = 0 loads = 129 drivers =,0
+Smallest config area : 245575600.  Fastest config wns;,27272
+##>                     0                  1                  2                  3                  4                  5                  6,7
+##>           Area        298961600          245575600          245575600          245575600          245575600          245575600          245575600,998318200
+##>            TNS            53791              53791              53791              53791              53791              53791              53791,53791
+##>    Num Rewrite                0                  0                  0                  0                  0                  0                  0,0
+##>     Num Factor                0                  0                  0                  0                  0                  0                  0,0
+##>      Num Share                0                  0                  0                  0                  0                  0                  0,0
+##>   Num CmultCse                0                  0                  0                  0                  0                  0                  0,0
+##>   Num Downsize                0                  0                  0                  0                  0                  0                  0,0
+##>  Num Speculate                0                  0                  0                  0                  0                  0                  0,0
+##>     Runtime(s)                0                  0                  0                  0                  0                  0                  0,0
+##>                                  END              245575600 ( -17.86)    107371455.20 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              245575600 (  +0.00)    107371455.20 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              245575600 (  +0.00)    214748364.70 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              245575600 ( -17.86)    214748364.70 (+107376909.50)          0 (       0)                    0 (  +0.00),0
+##>                                  END              245575600 (  +0.00)    -2727.20 (   +0.00)      53791 (       0)                    0 (  +0.00),0
+CSAGen Prep Share:0 Re-Write:0 Speculation:,0
+Smallest config area : 812801850.  Fastest config wns;,0
+##>           Area        812801850          812801850          812801850          812801850          812801850          812801850          812801850,812801850
+##>            TNS                0                  0                  0                  0                  0                  0                  0,0
+##>                                  END              812801850 (  +0.00)      329.70 (   +0.00)          0 (       0)                    0 (  +0.00),0
+CSAGen Prep Share:0 Re-Write:1 Speculation:,0
+CDN_DP_region_34_0 level = 0 loads = 96 drivers =,0
+Smallest config area : 129461050.  Fastest config wns;,26676
+##>           Area        166831250          129461050          129461050          129461050          129461050          129461050          129461050,230894450
+##>            TNS            26676              26676              26676              26676              26676              26676              26676,26676
+##>                                  END              166831250 (  +0.00)    107371514.80 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              258922100 ( +55.20)    214748364.70 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              258922100 ( +55.20)    214748364.70 (+107376849.90)          0 (       0)                    0 (  +0.00),0
+##>                                  END              258922100 (  +0.00)    214748364.70 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              129461050 (  -3.96)    214748364.70 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              129461050 (  +0.00)    214748364.70 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              129461050 (  +0.00)    -2667.60 (   +0.00)      26676 (       0)                    0 (  +0.00),0
+CDN_DP_region_34_1 level = 0 loads = 0 drivers =,0
+Smallest config area : 22689050.  Fastest config wns;,0
+##>           Area         32031600           22689050           22689050           22689050           22689050           22689050           22689050,22689050
+##>                                  END              114779900 (+100.00)     1729.00 (   +3.10)          0 (       0)                    0 (  +0.00),0
+##>                                  END               32031600 (  +0.00)     1738.50 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END               33366250 (  +4.17)     1738.50 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END               33366250 (  +0.00)     1738.50 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END               22689050 ( -19.05)     1738.50 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END               22689050 (  +0.00)     1738.50 (   +0.00)          0 (       0)                    0 (  +0.00),0
+Smallest config area : 10007205700.  Fastest config wns;,30648
+##>           Area      10008540350        10007205700        10007205700        10007205700        10007205700        10007205700        10007205700,10007205700
+##>            TNS          2214208            2214208            2214208            2214208            2214208            2214208            2214208,2214208
+##>                                  END            17761522200 ( -39.51)    -3173.30 (   +0.00)    2305922 (    -474)                    0 (  +0.00),0
+##>                                  END            10008540350 (  +0.00)    -3064.80 (   +0.00)    2214208 (       0)                    0 (  +0.00),0
+##>                                  END            10007205700 (  -0.01)    -3064.80 (   +0.00)    2214208 (       0)                    0 (  +0.00),0
+##>                                  END            10007205700 (  +0.00)    -3064.80 (   +0.00)    2214208 (       0)                    0 (  +0.00),0
+##>            TNS          2180759            2180759            2180759            2180759            2180759            2180759            2180759,2180759
+##>                                  END            17761522200 ( -39.51)    -3173.30 (   +0.00)    2272473 (    -474)                    0 (  +0.00),0
+##>                                  END            10008540350 (  +0.00)    -3064.80 (   +0.00)    2180759 (       0)                    0 (  +0.00),0
+##>                                  END            10007205700 (  -0.01)    -3064.80 (   +0.00)    2180759 (       0)                    0 (  +0.00),0
+##>                                  END            10007205700 (  +0.00)    -3064.80 (   +0.00)    2180759 (       0)                    0 (  +0.00),0
+Smallest config area : 45378100.  Fastest config wns;,0
+##>           Area         45378100           45378100           45378100           45378100           45378100           45378100           45378100,45378100
+##>                                  END               45378100 (  +0.00)     1345.40 (   +0.00)          0 (       0)                    0 (  +0.00),0
+Smallest config area : 356351550.  Fastest config wns;,3733
+##>           Area        356351550          356351550          356351550          356351550          356351550          356351550          356351550,356351550
+##>            TNS           119456             119456             119456             119456             119456             119456             119456,119456
+##>                                  END              356351550 (  +0.00)     -373.30 (   +0.00)     119456 (       0)                    0 (  +0.00),0
+Smallest config area : 1153137600.  Fastest config wns;,30658
+##>           Area       1155806900         1153137600         1153137600         1153137600         1153137600         1153137600         1153137600,1153137600
+##>            TNS           900342             900662             900662             900662             900662             900662             900662,900662
+##>                                  END             3155112600 ( +38.08)    -3095.30 (   +0.00)     909895 (     125)                    0 (  +0.00),0
+##>                                  END             1155806900 (  +0.00)    -3064.80 (   +0.00)     900342 (       0)                    0 (  +0.00),0
+##>                                  END             1153137600 (  -0.23)    -3065.80 (   -1.00)     900662 (     320)                    0 (  +0.00),0
+##>                                  END             1153137600 (  +0.00)    -3065.80 (   +0.00)     900662 (       0)                    0 (  +0.00),0
+Smallest config area : 457784950.  Fastest config wns;,26203
+##>           Area        545871850          457784950          457784950          457784950          457784950          457784950          457784950,1696340150
+##>            TNS            26203              26203              26203              26203              26203              26203              26203,26203
+##>                                  END              545871850 (  +0.00)    107371562.10 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              545871850 (  +0.00)    214748364.70 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              545871850 (  +0.00)    214748364.70 (+107376802.60)          0 (       0)                    0 (  +0.00),0
+##>                                  END              457784950 ( -16.14)    214748364.70 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              457784950 (  +0.00)    214748364.70 (   +0.00)          0 (       0)                    0 (  +0.00),0
+##>                                  END              457784950 (  +0.00)    -2620.30 (   +0.00)      26203 (       0)                    0 (  +0.00),0
+Number of big hc bmuxes after =,1
+##>G:Initial                           11         -         -    297660   1221296,875
+##>G:Const Prop                         6         -         -    263672    991471,1836
+##>G:Misc,614
+##>Total Elapsed,921
+R2O (ps):,0
+I2O (ps):,0
+: -skip_propagation :,1
+: -fromGenus :,1
+hi_fo_buf                497175    -3384  -8931218   2029482,1470600
+init_delay               497175    -3384  -8931218   2029482,1470600
+incr_delay               500732    -3067  -8471023   2029871,1470600
+incr_delay               500859    -3055  -8446616   2029871,1470600
+init_tns                 500859    -3055  -8446616   2029871,1470600
+incr_tns                 501148    -3055  -7432207   2030950,1470600
+incr_tns                 501341    -3055  -7221918   2039069,1470600
+incr_tns                 501309    -3055  -7162644   2039069,1470600
+##>M:Initial                            4         -         -    263672    991471,1853
+##>M:Pre Cleanup                        1         -         -    263672    991471,1853
+##>M:DP Operations                     30         -         -    162984    488146,2295
+##>M:Const Prop                         0     -3697   8586185    162984    488146,2295
+##>M:Cleanup                          153     -3055   7162644    171695    501309,2285
+##>M:MBCI                               0         -         -    171695    501309,2285
+##>M:Misc,733
+Start - Partition: pbs_iopt_9  Slack: -464.9 TNS: 69208.6 Cell-Count: 11961 Cell-Area:,53458
+Done  - Partition: pbs_iopt_9  Slack: -361.9 TNS: 60156.4 Cell-Count: 11606 Cell-Area:,52713
+Peak-Memory: 1157.65 Elapsed:,5
+Start - Partition: pbs_iopt_8  Slack: -859.1 TNS: 426618.5 Cell-Count: 18759 Cell-Area:,84215
+Done  - Partition: pbs_iopt_8  Slack: -741.8 TNS: 366629.7 Cell-Count: 18082 Cell-Area:,82934
+Start - Partition: pbs_iopt_6  Slack: -524.4 TNS: 127274.6 Cell-Count: 18768 Cell-Area:,84957
+Done  - Partition: pbs_iopt_6  Slack: -397.5 TNS: 102487.7 Cell-Count: 18221 Cell-Area:,83744
+Start - Partition: pbs_iopt_7  Slack: -508.0 TNS: 118774.0 Cell-Count: 18770 Cell-Area:,84417
+Done  - Partition: pbs_iopt_7  Slack: -438.1 TNS: 99332.6 Cell-Count: 17739 Cell-Area:,82605
+Start - Partition: pbs_iopt_0  Slack: -2871.7 TNS: 1048604.4 Cell-Count: 20299 Cell-Area:,38763
+Done  - Partition: pbs_iopt_0  Slack: -2871.7 TNS: 1028100.6 Cell-Count: 18021 Cell-Area:,36933
+Start - Partition: pbs_iopt_4  Slack: -3055.5 TNS: 1160008.7 Cell-Count: 20376 Cell-Area:,38946
+Done  - Partition: pbs_iopt_4  Slack: -3052.4 TNS: 1091219.9 Cell-Count: 18015 Cell-Area:,37045
+Start - Partition: pbs_iopt_3  Slack: -2879.0 TNS: 1051799.7 Cell-Count: 20379 Cell-Area:,38941
+Done  - Partition: pbs_iopt_3  Slack: -2872.4 TNS: 1059510.5 Cell-Count: 17991 Cell-Area:,36965
+Peak-Memory: 1216.65 Elapsed:,22
+Start - Partition: pbs_iopt_2  Slack: -2921.1 TNS: 1058919.9 Cell-Count: 20412 Cell-Area:,38897
+Done  - Partition: pbs_iopt_2  Slack: -2912.2 TNS: 1021655.7 Cell-Count: 18038 Cell-Area:,36964
+Start - Partition: pbs_iopt_1  Slack: -2871.0 TNS: 602099.8 Cell-Count: 11379 Cell-Area:,21791
+Done  - Partition: pbs_iopt_1  Slack: -2871.0 TNS: 593263.2 Cell-Count: 10085 Cell-Area:,20780
+Start - Partition: pbs_iopt_5  Slack: -468.3 TNS: 373281.6 Cell-Count: 10592 Cell-Area:,16919
+Done  - Partition: pbs_iopt_5  Slack: -464.0 TNS: 373091.5 Cell-Count: 10289 Cell-Area:,16732
+Nb insts =,158087
+hi_fo_buf                495655    -3298  -7934562   2034965,1470600
+init_crb_wns             495655    -3298  -7934562   2034965,1470600
+incr_crb_wns_1           496980    -3055  -7497429   2034965,1470600
+incr_crb_wns_2           496981    -3055  -7496847   2034965,1470600
+incr_crb_wns_3           496981    -3055  -7496847   2034965,1470600
+init_crb_tns             496981    -3055  -7496847   2034965,1470600
+incr_crb_tns_1           496876    -3040  -7311939   2044337,1470600
+##                     INIT         0 (0.0  %)         0 (0.0  %)   -3485.7           7982136,487421
+##                 INIT_TIM         0 (0.0  %)         0 (0.0  %)   -3485.7           7982136,487421
+##                  CRB_WNS       161 (54.6 %)       167 (53.9 %)   -3055.2           7496847,496980
+##                  CRB_TNS       119 (40.3 %)       121 (39.0 %)   -3040.2           7311939,496875
+295,310
+Number of user defined NDR nets found:,0
+Number of NDR nets found:,0
+Number of nets with minimum layer assignments:,0

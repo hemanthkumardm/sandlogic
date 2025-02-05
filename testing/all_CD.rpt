@@ -1,0 +1,166 @@
+
+ 	 Check Design Report (c)
+	 ------------------- 
+No subdesign's name is greater than 1.5k in length.
+
+ Feedthrough Module(s)
+ -------------------------
+No feed through module in 'v5_dma_top'
+
+  Unresolved References & Empty Modules
+  ------------------------------------- 
+No unresolved references in design 'v5_dma_top'
+
+No empty modules in design 'v5_dma_top'
+
+ Unloaded Pin(s), Port(s)
+ -------------------------
+No unloaded sequential element in 'v5_dma_top'
+
+design 'v5_dma_top' has the following unloaded port(s)
+port:v5_dma_top/AXI_W_axi_bresp[0]
+Total number of unloaded ports in design 'v5_dma_top' : 1
+
+ Unloaded Combinational Pin(s)
+ -------------------------------
+No unloaded combinational element in 'v5_dma_top'
+
+ Assigns
+ ------- 
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awid[3]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awid[2]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awid[1]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awid[0]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awsize[2]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awsize[0]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awburst[1]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awlock' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awcache[3]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awcache[2]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awcache[0]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awprot[2]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awprot[1]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awprot[0]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awqos[3]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awqos[2]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awqos[1]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_awqos[0]' in design v5_dma_top
+Encountered an assign statement at port 'port:v5_dma_top/AXI_W_axi_wuser' in design v5_dma_top
+Total number of assign statements in design 'v5_dma_top' : 19
+
+ Undriven Port(s)/Pin(s)
+ ------------------------
+No undriven combinational pin in 'v5_dma_top'
+
+No undriven sequential pin in 'v5_dma_top'
+
+No undriven hierarchical pin in 'v5_dma_top'
+
+No undriven port in 'v5_dma_top'
+
+ Multidriven Port(s)/Pin(s)
+--------------------------
+
+No multidriven combinational pin in 'v5_dma_top'
+
+No multidriven sequential pin in 'v5_dma_top'
+
+No multidriven hierarchical pin in 'v5_dma_top'
+
+No multidriven ports in 'v5_dma_top'
+
+No multidriven unloaded nets in 'v5_dma_top'
+
+  Constant Pin(s)
+  ----------------
+No constant combinational pin(s) in design 'v5_dma_top'
+
+No constant sequential pin(s) in design 'v5_dma_top'
+
+No constant hierarchical pin(s) in design 'v5_dma_top'
+
+design 'v5_dma_top' has the following constant port(s)
+port:v5_dma_top/AXI_W_axi_awid[3]
+port:v5_dma_top/AXI_W_axi_awid[2]
+port:v5_dma_top/AXI_W_axi_awid[1]
+port:v5_dma_top/AXI_W_axi_awid[0]
+port:v5_dma_top/AXI_W_axi_awsize[2]
+port:v5_dma_top/AXI_W_axi_awsize[0]
+port:v5_dma_top/AXI_W_axi_awburst[1]
+port:v5_dma_top/AXI_W_axi_awlock
+port:v5_dma_top/AXI_W_axi_awcache[3]
+port:v5_dma_top/AXI_W_axi_awcache[2]
+port:v5_dma_top/AXI_W_axi_awcache[0]
+port:v5_dma_top/AXI_W_axi_awprot[2]
+port:v5_dma_top/AXI_W_axi_awprot[1]
+port:v5_dma_top/AXI_W_axi_awprot[0]
+port:v5_dma_top/AXI_W_axi_awqos[3]
+port:v5_dma_top/AXI_W_axi_awqos[2]
+port:v5_dma_top/AXI_W_axi_awqos[1]
+port:v5_dma_top/AXI_W_axi_awqos[0]
+port:v5_dma_top/AXI_W_axi_wuser
+Total number of constant port(s) in design 'v5_dma_top' : 19
+
+  Preserved instances(s)
+  ----------------
+No preserved combinational instance(s) in design 'v5_dma_top'
+No preserved sequential instance(s) in design 'v5_dma_top'
+No preserved hierarchical instance(s) in design 'v5_dma_top'
+
+  Physical only instances(s)
+  ----------------
+No physical only instance(s) in design 'v5_dma_top'
+
+  Logical only instance(s) and linked libcells
+    -----------------------------------------
+No logical only instance(s) in design 'v5_dma_top'
+
+Libcells with no corresponding LEF
+----------------------------------
+No libcell(s) found.
+
+LEF cells with no corresponding libcell
+---------------------------------------
+lib_cell:default_emulate_libset_max/physical_cells/DFFNSRX4
+lib_cell:default_emulate_libset_max/physical_cells/FILL1
+lib_cell:default_emulate_libset_max/physical_cells/FILL2
+lib_cell:default_emulate_libset_max/physical_cells/FILL64
+lib_cell:default_emulate_libset_max/physical_cells/FILL8
+lib_cell:default_emulate_libset_max/physical_cells/FILL16
+lib_cell:default_emulate_libset_max/physical_cells/ANTENNA
+lib_cell:default_emulate_libset_max/physical_cells/FILL4
+lib_cell:default_emulate_libset_max/physical_cells/DFFSX2
+lib_cell:default_emulate_libset_max/physical_cells/FILL32
+Total number cell(s) with only physical (LEF) Info : 10
+
+ Summary
+ ------- 
+
+              Name                       Total
+----------------------------------------------
+Unresolved References                        0
+Empty Modules                                0
+Unloaded Port(s)                             1
+Unloaded Sequential Pin(s)                   0
+Unloaded Combinational Pin(s)                0
+Assigns                                     19
+Undriven Port(s)                             0
+Undriven Leaf Pin(s)                         0
+Undriven hierarchical pin(s)                 0
+Multidriven Port(s)                          0
+Multidriven Leaf Pin(s)                      0
+Multidriven hierarchical Pin(s)              0
+Multidriven unloaded net(s)                  0
+Constant Port(s)                            19
+Constant Leaf Pin(s)                         0
+Constant hierarchical Pin(s)                 0
+Preserved leaf instance(s)                   0
+Preserved hierarchical instance(s)           0
+Feedthrough Modules(s)                       0
+Libcells with no LEF cell                    0
+Physical (LEF) cells with no libcell        10
+Subdesigns with long module name             0
+Physical only instance(s)                    0
+Logical only instance(s)                     0
+
+  Done Checking the design.

@@ -10,15 +10,12 @@ import threading
 from tkinter import simpledialog
 from email.mime.base import MIMEBase
 from email import encoders
-
 from email.message import EmailMessage
 import ssl
 import smtplib
 
 
 
-
-# Load user data from CSV
 def load_user_data(csv_file):
     df = pd.read_csv(csv_file)
     user_dict = {}
@@ -26,7 +23,7 @@ def load_user_data(csv_file):
         user_dict[row["name"]] = {
             "email": row["email"],
             "password": row["password"],
-            "rtl": row["rtl"].strip().lower() == "yes",
+            "linting": row["linting"].strip().lower() == "yes",
             "synthesis": row["synthesis"].strip().lower() == "yes",
             "lec": row["lec"].strip().lower() == "yes",
             "pnr": row["pnr"].strip().lower() == "yes",
@@ -35,7 +32,6 @@ def load_user_data(csv_file):
         }
     return user_dict
 
-# Load user data
 user_data = load_user_data("details.csv")
 
 
@@ -92,7 +88,6 @@ def send_flow_results(design_name, user_name, user_email, default_emails, log_fi
 
     recipients = [user_email] + (default_emails if default_emails else [])
 
-    # Collect attachments as tuples
     attachments = []
     if log_file:
         attachments.append((log_file, "log"))
@@ -137,17 +132,19 @@ def create_directories_and_move_files(design_name, user_name, user_email):
         for path in paths.values():
             os.makedirs(path, exist_ok=True)
 
+
+
 #------------------------------------------------------- moving files -----------------------------------#
 
     file_mappings = {'.v': paths["rtl"], '.sv': paths["rtl"], '.tcl': paths["scripts"], 
-                     '.sdc': paths["sdc"], '.lib': paths["libs"], '.lef': paths["libs"], '.tf': paths["libs"]}
+                     '.sdc': paths["sdc"], '.lib': paths["libs"], '.lef': paths["libs"], 'def': paths["libs"], '.tf': paths["libs"]}
 
     for ext, target_dir in file_mappings.items():
         for file in os.listdir(base_dir):
             if file.endswith(ext):
                 source = os.path.join(base_dir, file)
                 target = os.path.join(target_dir, file)
-                shutil.copy(source, target)
+                shutil.move(source, target)
                 print(f"Moved {file} to {target_dir}")
 
 #------------------------------------------------------- config.json ---------------------------------$
@@ -160,7 +157,7 @@ def create_directories_and_move_files(design_name, user_name, user_email):
                     "user_name": user_name,
                     "user_email": user_email,
                 },
-                "rtl": {
+                "linting": {
                     "design_name": design_name,
                     "script": "run_rtl.tcl",
                     "rtl_path": paths["rtl"],
@@ -224,32 +221,32 @@ def load_config(config_file):
     with open(config_file, "r") as file:
         return json.load(file)
 
-#--------------------------------------------- running rtl ----------------------------#
+#--------------------------------------------- running linting ----------------------------#
 
-def run_rtl(config, env, user_name, user_email, default_emails):
+def run_linting(config, env, user_name, user_email, default_emails):
     design_name = list(config.keys())[0]
-    rtl_config = config[design_name]['asic_flow']['rtl']
+    linting_config = config[design_name]['asic_flow']['linting']
 
-    script_path = os.path.join(rtl_config['scripts_path'], rtl_config['script'])
-    log_file = os.path.join(rtl_config['log_path'], get_timestamped_filename("rtl.log"))
-    error_file = os.path.join(rtl_config['log_path'], get_timestamped_filename("rtl.err"))
+    script_path = os.path.join(linting_config['scripts_path'], linting_config['script'])
+    log_file = os.path.join(linting_config['log_path'], get_timestamped_filename("linting.log"))
+    error_file = os.path.join(linting_config['log_path'], get_timestamped_filename("linting.err"))
 
     env["DESIGN_NAME"] = design_name
-    for key, path in rtl_config.items():
+    for key, path in linting_config.items():
         if key.endswith("_path"):
             env[key.upper()] = path  
 
-    print(f"\nRunning RTL stage for {design_name}...")
+    print(f"\nRunning linting stage for {design_name}...")
 
-    command = ["tclsh", script_path]
+    command = ["jg -superlint", script_path]
 
     with open(log_file, "w") as log, open(error_file, "w") as err:
-        process = subprocess.run(command, cwd=rtl_config['scripts_path'], stdout=log, stderr=err, env=env)
+        process = subprocess.run(command, cwd=linting_config['scripts_path'], stdout=log, stderr=err, env=env)
 
     if process.returncode == 0:
-        print("RTL completed successfully. Check logs for details.")
+        print("linting completed successfully. Check logs for details.")
     else:
-        print(f"Errors occurred in RTL stage. Check {error_file}")
+        print(f"Errors occurred in linting stage. Check {error_file}")
 
     send_flow_results(design_name, user_name, user_email, default_emails, log_file, error_file)
 
@@ -266,16 +263,14 @@ def run_synthesis(config, env, effort, user_name, user_email, default_emails):
     error_file = os.path.join(synthesis_config['log_path'], get_timestamped_filename("synthesis.err"))
 
     env["DESIGN_NAME"] = design_name
-    env["EFFORT_LEVEL"] = effort  # Pass effort level to the synthesis environment
+    env["EFFORT_LEVEL"] = effort  
 
-    # Set environment variables for TCL
     for key, path in synthesis_config.items():
         if key.endswith("_path"):
             env[key.upper()] = path  
 
     print(f"\nRunning synthesis stage for {design_name} with {effort} effort level...")
 
-    # Command to run the TCL script
     command = ["tclsh", script_path]
 
     with open(log_file, "w") as log, open(error_file, "w") as err:
@@ -286,7 +281,7 @@ def run_synthesis(config, env, effort, user_name, user_email, default_emails):
     else:
         print(f"Errors occurred in synthesis stage. Check {error_file}")
     
-    send_flow_results(design_name, user_name, user_email, default_emails)
+    send_flow_results(design_name, user_name, user_email, default_emails, log_file, error_file)
 
 
 
@@ -304,7 +299,6 @@ def run_lec(config, env, user_name, user_email, default_emails):
     error_file = os.path.join(lec_config['log_path'], get_timestamped_filename("lec.err"))
 
     env["DESIGN_NAME"] = design_name
-    # env["EFFORT_LEVEL"] = effort  # Pass effort level to the synthesis environment
 
     # Set environment variables for TCL
     for key, path in lec_config.items():
@@ -313,7 +307,6 @@ def run_lec(config, env, user_name, user_email, default_emails):
 
     print(f"\nRunning lec stage for {design_name}")
 
-    # Command to run the TCL script
     command = ["tclsh", script_path]
 
     with open(log_file, "w") as log, open(error_file, "w") as err:
@@ -324,7 +317,7 @@ def run_lec(config, env, user_name, user_email, default_emails):
     else:
         print(f"Errors occurred in synthesis stage. Check {error_file}")
 
-    send_flow_results(design_name, user_name, user_email, default_emails)
+    send_flow_results(design_name, user_name, user_email, default_emails, log_file, error_file)
         
 #--------------------------------------------------- pnr --------------------------------------------#
 
@@ -339,16 +332,14 @@ def run_pnr(config, env, effort, user_name, user_email, default_emails):
     error_file = os.path.join(pnr_config['log_path'], get_timestamped_filename("pnr.err"))
 
     env["DESIGN_NAME"] = design_name
-    env["EFFORT_LEVEL"] = effort  # Pass effort level to the pnr environment
+    env["EFFORT_LEVEL"] = effort 
 
-    # Set environment variables for TCL
     for key, path in pnr_config.items():
         if key.endswith("_path"):
             env[key.upper()] = path  
 
     print(f"\nRunning PNR stage for {design_name}")
 
-    # Command to run the TCL script
     command = ["tclsh", script_path]
 
     with open(log_file, "w") as log, open(error_file, "w") as err:
@@ -365,12 +356,13 @@ if __name__ == "__main__":
     print (" Started Automation......")
 
 
+#------------------------------------------ GUI variables ---------------------------------------------- #
+
 root = tk.Tk()
 root.config(bg="lightgray")
 root.title("ASIC Flow Automation")
 root.geometry("1050x850")
 
-# ASCII Art Text
 ascii_art = """
  ░▒▓███████▓▒░  ▒▓██████▓▒   ▓███████▓▒  ▒▓███████▓▒  ▒▓█▓▒        ▒▓██████▓▒   ▒▓██████▓▒  ▒▓█▓▒  ▒▓██████▓▒░   
  ░▒▓█▓▒░      ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒░░▒▓█▓▒ ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░  
@@ -381,8 +373,6 @@ ascii_art = """
  ░▒▓███████▓▒ ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓███████▓▒  ▒▓████████▓▒ ▒▓██████▓▒   ▒▓██████▓▒  ▒▓█▓▒  ▒▓██████▓▒░   
 """
 
-
-# Create a Text widget to display the ASCII art
 ascii_text = tk.Text(root, height=9, width=113)
 ascii_text.pack(pady=20)
 ascii_text.insert(tk.END, ascii_art)
@@ -390,10 +380,8 @@ ascii_text.config(state=tk.DISABLED)
 
 tk.Label(root, text="Select Your Name:", fg="blue", font=("Helvetica", 12, "bold"), bg="lightgray").pack(pady=(20, 10))
 
-# Dropdown for selecting the name
 name_var = tk.StringVar()
 
-# OptionMenu for selecting name with better styling
 name_dropdown = tk.OptionMenu(root, name_var, *user_data.keys())
 name_dropdown.config(font=("Helvetica", 12), width=30, bg="white", fg="black", relief="solid")
 name_dropdown.pack(pady=10)
@@ -402,14 +390,12 @@ tk.Label(root, text="Your Email:", fg="blue", font=("Helvetica", 12, "bold"), bg
 email_entry = tk.Entry(root, width=50, state="readonly")
 email_entry.pack()
 
-# Define a dictionary to store the design checkboxes
 design_names = ["udp", "rdmi", "flexicore"]
 design_vars = {}
 
 design_frame = tk.Frame(root)
 design_frame.pack()
 
-# Add checkboxes for each design name
 tk.Label(root, text="Select Design Name:", fg="blue", font=("Helvetica", 12, "bold"), bg="lightgray").pack(pady=(20, 10))
 
 for design in design_names:
@@ -419,64 +405,61 @@ for design in design_names:
 
 tk.Label(root, text="Select Flow:", fg="blue", font=("Helvetica", 12, "bold"), bg="lightgray").pack(pady=(20, 10))
 
-rtl_var = tk.BooleanVar()
+linting_var = tk.BooleanVar()
 synthesis_var = tk.BooleanVar()
 lec_var = tk.BooleanVar()
 pnr_var = tk.BooleanVar()
-rtl_check = tk.Checkbutton(root, text="RTL Flow", variable=rtl_var, fg="red")
+linting_check = tk.Checkbutton(root, text="Linting Flow", variable=linting_var, fg="red")
 synthesis_check = tk.Checkbutton(root, text="Synthesis Flow", variable=synthesis_var, fg="red")
 lec_check = tk.Checkbutton(root, text="LEC Flow", variable=lec_var, fg="red")
 pnr_check = tk.Checkbutton(root, text="PNR Flow", variable=pnr_var, fg="red")
-rtl_check.pack()
+linting_check.pack()
 synthesis_check.pack()
 lec_check.pack()
 pnr_check.pack()
 
 
-# Label for "Select Effort Level"
 tk.Label(root, text="Select Effort Level:", fg="blue", font=("Helvetica", 12, "bold"), bg="lightgray").pack(pady=(20, 10))
 
-# OptionMenu for selecting effort level with styling
 effort_var = tk.StringVar(value="medium")
 effort_options = ["low", "medium", "high"]
 effort_dropdown = tk.OptionMenu(root, effort_var, *effort_options)
 
-# Styling the dropdown
 effort_dropdown.config(font=("Helvetica", 12), width=30, bg="white", fg="black", relief="solid")
 effort_dropdown.pack(pady=10)
 
-
-# Add "Forward to Leaders" checkbox
 forward_to_leaders_var = tk.BooleanVar()
 forward_to_leaders_checkbox = tk.Checkbutton(root, text="Do you want to forward it to leaders?", variable=forward_to_leaders_var, fg="blue")
 forward_to_leaders_checkbox.pack(pady=(10, 20))
 
+# ------------------------------------------- END of GUI part ---------------------------------------------- #
 
+
+# -------------------------------------------- GUI name selection ------------------------------------------- #
 def on_name_select(event=None):
     selected_name = name_var.get()
     if selected_name in user_data:
         email_entry.config(state="normal")
         email_entry.delete(0, tk.END)
         email_entry.insert(0, user_data[selected_name]["email"])
-        email_entry.config(state="readonly")  # Make it uneditable
+        email_entry.config(state="readonly") 
 
-        # Enable/Disable flow options
-        rtl_var.set(user_data[selected_name]["rtl"])
+        linting_var.set(user_data[selected_name]["linting"])
         synthesis_var.set(user_data[selected_name]["synthesis"])
         lec_var.set(user_data[selected_name]["lec"])
         pnr_var.set(user_data[selected_name]["pnr"])
 
-        rtl_check.config(state="normal" if user_data[selected_name]["rtl"] else "disabled")
+        linting_check.config(state="normal" if user_data[selected_name]["linting"] else "disabled")
         synthesis_check.config(state="normal" if user_data[selected_name]["synthesis"] else "disabled")
         lec_check.config(state="normal" if user_data[selected_name]["lec"] else "disabled")
         pnr_check.config(state="normal" if user_data[selected_name]["pnr"] else "disabled")
 
 
-# Attach the event to the name dropdown
 name_var.trace_add("write", lambda *args: on_name_select(None))
 
 
-# Function to execute ASIC flow
+# ------------------------------------------------ start the flow ------------------------------------------------- #
+
 def execute_flow(user_data, effort_level, forward_to_leaders):
     design_name = user_data["design_name"]
     user_name = user_data["user_name"]
@@ -490,12 +473,11 @@ def execute_flow(user_data, effort_level, forward_to_leaders):
 
     config = load_config(config_file)
 
-    # Execute selected flows
-    if user_data["rtl_selected"]:
-        run_rtl(config, env, user_name, user_email, default_emails)
+    if user_data["linting_selected"]:
+        run_linting(config, env, user_name, user_email, default_emails)
     
     if user_data["synthesis_selected"]:
-        run_synthesis(config, env, user_name, user_email, default_emails)
+        run_synthesis(config, env, effort_level, user_name, user_email, default_emails)
     
     if user_data["lec_selected"]:
         run_lec(config, env, user_name, user_email, default_emails)
@@ -506,19 +488,18 @@ def execute_flow(user_data, effort_level, forward_to_leaders):
 def execute_async(user_data):
     threading.Thread(target=execute_flow, args=(user_data, effort_var.get(), forward_to_leaders_var.get())).start()
 
+# ------------------------------------confirmation GUI ----------------------------------------- #
 
-# Confirm and Execute
 def confirm_and_execute():
     user_name = name_var.get()
     user_email = email_entry.get()
-    rtl_selected = rtl_var.get() and user_data[user_name]["rtl"]
+    linting_selected = linting_var.get() and user_data[user_name]["linting"]
     synthesis_selected = synthesis_var.get() and user_data[user_name]["synthesis"]
     lec_selected = lec_var.get() and user_data[user_name]["lec"]
     pnr_selected = pnr_var.get() and user_data[user_name]["pnr"]
     effort_level = effort_var.get()
     forward_to_leaders = forward_to_leaders_var.get()
 
-    # Validate input
     if not user_name or not user_email:
         messagebox.showerror("Error", "All fields must be filled!")
         return
@@ -532,16 +513,15 @@ def confirm_and_execute():
         messagebox.showerror("Error", "User not found!")
         return
 
-        # Check if exactly one design is selected
     selected_designs = [design for design, var in design_vars.items() if var.get()]
     if len(selected_designs) != 1:
         messagebox.showerror("Error", "Please select exactly one design.")
         return
     
-    design_name = selected_designs[0]  # Get the selected design name
+    design_name = selected_designs[0] 
 
     selected_flows = []
-    if rtl_selected:
+    if linting_selected:
         selected_flows.append("RTL")
     if synthesis_selected:
         selected_flows.append("Synthesis")
@@ -560,12 +540,12 @@ def confirm_and_execute():
     """
     
     if messagebox.askyesno("Confirm Details", confirmation_message):
-        root.destroy()  # Close GUI before execution
+        root.destroy()
         execute_async({
             "user_name": user_name,
             "user_email": user_email,
             "design_name": design_name,
-            "rtl_selected": rtl_selected,
+            "linting_selected": linting_selected,
             "synthesis_selected": synthesis_selected,
             "lec_selected": lec_selected,
             "pnr_selected": pnr_selected,
@@ -576,3 +556,5 @@ def confirm_and_execute():
 tk.Button(root, text="Submit", command=confirm_and_execute, fg="white", bg="darkblue").pack()
 
 root.mainloop()
+
+
