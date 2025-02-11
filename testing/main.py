@@ -331,7 +331,7 @@ def run_linting(config, env, user_name, user_email, default_emails):
     command = ["jg", "-superlint", script_path]
 
     with open(log_file, "w") as log, open(error_file, "w") as err:
-        process = subprocess.run(command, cwd=linting_config['scripts_path'], stdout=log, stderr=err, env=env)
+        process = subprocess.Popen(command, cwd=linting_config['scripts_path'], stdout=log, stderr=err, env=env)
 
     if process.returncode == 0:
         print("Linting completed successfully. Parsing log file...")
@@ -383,7 +383,7 @@ def run_synthesis(config, env, effort, user_name, user_email, default_emails):
     command = ["gneus", "-batch", "-file", script_path]
 
     with open(log_file, "w") as log, open(error_file, "w") as err:
-        process = subprocess.run(command, cwd=synthesis_config['scripts_path'], stdout=log, stderr=err, env=env)
+        process = subprocess.Popen(command, cwd=synthesis_config['scripts_path'], stdout=log, stderr=err, env=env)
 
     if process.returncode == 0:
         print("Synthesis completed successfully. Check logs for details.")
@@ -419,7 +419,7 @@ def run_lec(config, env, user_name, user_email, default_emails):
     command = ["lec", "-xl", "-nogui", "-do", script_path]
 
     with open(log_file, "w") as log, open(error_file, "w") as err:
-        process = subprocess.run(command, cwd=lec_config['scripts_path'], stdout=log, stderr=err, env=env)
+        process = subprocess.Popen(command, cwd=lec_config['scripts_path'], stdout=log, stderr=err, env=env)
 
     if process.returncode == 0:
         print("LEC completed successfully. Check logs for details.")
@@ -452,7 +452,7 @@ def run_pnr(config, env, effort, user_name, user_email, default_emails):
     command = ["tclsh", script_path]
 
     with open(log_file, "w") as log, open(error_file, "w") as err:
-        process = subprocess.run(command, cwd=pnr_config['scripts_path'], stdout=log, stderr=err, env=env)
+        process = subprocess.Popen(command, cwd=pnr_config['scripts_path'], stdout=log, stderr=err, env=env)
 
     if process.returncode == 0:
         print("PNR completed successfully. Check logs for details.")
@@ -473,13 +473,13 @@ root.title("ASIC Flow Automation")
 root.geometry("1050x850")
 
 ascii_art = """
- ░▒▓███████▓▒░  ▒▓██████▓▒   ▓███████▓▒  ▒▓███████▓▒  ▒▓█▓▒        ▒▓██████▓▒   ▒▓██████▓▒  ▒▓█▓▒  ▒▓██████▓▒░   
- ░▒▓█▓▒░      ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒░░▒▓█▓▒ ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░  
- ░▒▓█▓▒░      ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒░       ▒▓█▓▒ ▒▓█▓▒          
- ░▒▓██████▓▒░ ░▒▓████████▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒▒▓███▓▒ ▒▓█▓▒ ▒▓█▓▒          
-       ░▒▓█▓▒ ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒░░▒▓█▓▒ ▒▓█▓▒ ▒▓█▓▒          
-       ░▒▓█▓▒ ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒░░▒▓█▓▒ ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░  
- ░▒▓███████▓▒ ░▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓███████▓▒  ▒▓████████▓▒ ▒▓██████▓▒   ▒▓██████▓▒  ▒▓█▓▒  ▒▓██████▓▒░   
+  ▒▓███████▓▒   ▒▓██████▓▒   ▓███████▓▒  ▒▓███████▓▒  ▒▓█▓▒        ▒▓██████▓▒   ▒▓██████▓▒  ▒▓█▓▒  ▒▓██████▓▒    
+  ▒▓█▓▒        ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒   
+  ▒▓█▓▒        ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒        ▒▓█▓▒ ▒▓█▓▒          
+  ▒▓██████▓▒   ▒▓████████▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒▒▓███▓▒ ▒▓█▓▒ ▒▓█▓▒          
+        ▒▓█▓▒  ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒ ▒▓█▓▒          
+        ▒▓█▓▒  ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒   
+  ▒▓███████▓▒  ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓███████▓▒  ▒▓████████▓▒ ▒▓██████▓▒   ▒▓██████▓▒  ▒▓█▓▒  ▒▓██████▓▒    
 """
 
 ascii_text = tk.Text(root, height=9, width=113)
@@ -518,10 +518,10 @@ linting_var = tk.BooleanVar()
 synthesis_var = tk.BooleanVar()
 lec_var = tk.BooleanVar()
 pnr_var = tk.BooleanVar()
-linting_check = tk.Checkbutton(root, text="Linting Flow", variable=linting_var, fg="red")
-synthesis_check = tk.Checkbutton(root, text="Synthesis Flow", variable=synthesis_var, fg="red")
-lec_check = tk.Checkbutton(root, text="LEC Flow", variable=lec_var, fg="red")
-pnr_check = tk.Checkbutton(root, text="PNR Flow", variable=pnr_var, fg="red")
+linting_check = tk.Checkbutton(root, text="Linting Flow", variable=linting_var, fg="red", state= 'normal')
+synthesis_check = tk.Checkbutton(root, text="Synthesis Flow", variable=synthesis_var, fg="red", state= 'normal')
+lec_check = tk.Checkbutton(root, text="LEC Flow", variable=lec_var, fg="red", state= 'normal')
+pnr_check = tk.Checkbutton(root, text="PNR Flow", variable=pnr_var, fg="red", state= 'normal')
 linting_check.pack()
 synthesis_check.pack()
 lec_check.pack()

@@ -1,0 +1,8 @@
+set_timing_derate -delay_corner fast_min  -cell_delay -early 0.97 
+set_timing_derate -delay_corner fast_min  -cell_delay -late 1.03 
+set_timing_derate -delay_corner fast_min  -net_delay -early 0.97 
+set_timing_derate -delay_corner fast_min  -net_delay -late 1.03 
+set_timing_derate -delay_corner slow_max  -cell_delay -early 0.97 
+set_timing_derate -delay_corner slow_max  -cell_delay -late 1.03 
+set_timing_derate -delay_corner slow_max  -net_delay -early 0.97 
+set_timing_derate -delay_corner slow_max  -net_delay -late 1.03 
